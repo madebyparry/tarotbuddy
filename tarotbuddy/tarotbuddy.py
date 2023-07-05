@@ -4,11 +4,31 @@ import inquirer
 import json
 import os, sys, time, random
 
+#
+# TODO: Prettify
+#       Make web ready functions
+#       Split file contents
+#       Define inverted cards
+#       Better spreads
+#       
+# Cont: Path set
+#       Set card vars
+#       Intro
+#       Initial selections
+#       Triage selections
+#       Functional script
+#       Return to initial selections
+#
+
 # Path and data get
 tbd = os.path.dirname(os.path.realpath(__file__))
 f = open(tbd + '/data/reference.json')
 data = json.load(f)
 f.close()
+f = open(tbd + '/data/dialog.json')
+dialog = json.load(f)
+f.close()
+
 
 # Card variables
 cards = data['tarot_cards']
@@ -16,12 +36,14 @@ rom_num = data['rom_num']
 summaries = data['summaries']
 descriptions = data['descriptions']
 
+#dialog variables
+
 
 def main():
-    progressBarStart()
     print('\n\t')
-    theatricalPrint(getGreetingStr(), 0.1)
+    theatricalPrint('\t' + getGreetingStr(), 0.05)
     print('\n')
+    time.sleep(0.5)
     initialSelection()
 
 # Intro progress bar
@@ -35,7 +57,10 @@ def progressBarStart():
     sys.stdout.flush()
     for i in range(11):
         time.sleep(random.random())
-        progressBar(i,10)
+        progressBar(i, 10)
+    sys.stdout.write('''\n\t|___________________________________________| ''')
+    sys.stdout.flush()
+
 
 def progressBar(count_value, total, suffix=''):
     bar_length = 30
@@ -46,16 +71,25 @@ def progressBar(count_value, total, suffix=''):
         sys.stdout.write('\t| | %s | %s%s %s | |\r' %(bar, percentage, '%', suffix))
         sys.stdout.flush()
     else:
-        sys.stdout.write('\t| | ------------------------------------- |')
-        sys.stdout.write('''\n\t|___________________________________________| ''')
+        sys.stdout.write('\t| | % * : % * , DONE * # * . * % * , * | |')
         sys.stdout.flush()
 
 # Aesthetic functions
 def theatricalPrint(message, t = 0.025):
+    c = 0
     for i in message:
-        time.sleep(t)
-        sys.stdout.write(i)
-        sys.stdout.flush()
+        if c > 60 and i == " ":
+            sys.stdout.write(i)
+            sys.stdout.flush()
+            c = 0
+            print()
+        else:
+            time.sleep(t)
+            sys.stdout.write(i)
+            sys.stdout.flush()
+            c = c + 1
+
+
     print('\n')
 
 def thinking(a, b):
@@ -70,7 +104,7 @@ def thinking(a, b):
 
 # Greetings getter
 def getGreetingStr():
-    greeting = data['greetings'][random.randint(0,(len(data['greetings']) - 1))]
+    greeting = dialog['greetings'][random.randint(0,(len(dialog['greetings']) - 1))]
     return greeting
 
 # Enacting selection
@@ -82,7 +116,8 @@ def initialSelection():
             ('Pull a card','p'),
             ('Spreads','s'),
             ('Card lookup','l'),
-            ('Information','i')
+            ('Information','i'),
+            ('Exit','d')
         ])]
     initial_choice = inquirer.prompt(initial_question)
     triageSelection(initial_choice['Initial_input'])
@@ -90,17 +125,22 @@ def initialSelection():
 def triageSelection(user_in):
     if user_in == 'p':
         pullCard()
+        main()
     elif user_in == 's':
         selectSpread()
     elif user_in == 'l':
         selectLookup()
+        main()
     elif user_in == 'i':
         programInfo()
+    elif user_in == 'd':
+        print('Bye bye!')
     else: 
         print('bruh')
 
 # Program functions
 def selectSpread():
+    thinking(1,5)
     which_spread=[inquirer.List(
         'spread',
         message='What fancies you?',
@@ -127,6 +167,9 @@ def getHand(x):
     return hand
 
 def displaySpread(hand):
+    for i in range(11):
+        time.sleep(random.random())
+        progressBar(i, 10)
     while True:
         current_spread=[inquirer.List(
             'card',
@@ -148,10 +191,10 @@ def pullCard():
     cardLen = len(cards) - 1
     r = random.randint(1,cardLen)
     thinking(5, 10)
-    os.system('catimg -w 100 ' + tbd + '/data/img/' + str(r) + '.png')
-    theatricalPrint(rom_num[r], 0.2)
+    os.system('catimg -w 120 ' + tbd + '/data/img/' + str(r) + '.png')
+    theatricalPrint(rom_num[r], 0.1)
     time.sleep(1)
-    theatricalPrint(cards[r], 0.2)
+    theatricalPrint(cards[r], 0.1)
     thinking(3,5)
     theatricalPrint(descriptions[r])
     thinking(3,5)
@@ -170,6 +213,7 @@ def selectLookup():
 
 def lookupCard(x):
     thinking(2, 5)
+    os.system('catimg -w 90 ' + tbd + '/data/img/' + str(x) + '.png')
     theatricalPrint(rom_num[x], 0.05)
     theatricalPrint(cards[x], 0.05)
     theatricalPrint(descriptions[x])
@@ -182,4 +226,8 @@ def programInfo():
     print('Be sure to check out the web version hosted at https://madebyparry.ddns.net/tarotbuddy')
     print('\n\t With love,')
     print('\n\t - MBP')
+
+
+# Program start
+progressBarStart()
 main()
