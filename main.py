@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import colorama
 import inquirer
-import json
 import os, sys, time, random
-
+fromSh = True
+import tarotbuddy
 #
 # TODO: Prettify
 #       Make web ready functions
@@ -20,31 +20,17 @@ import os, sys, time, random
 #       Return to initial selections
 #
 
-# Path and data get
-tbd = os.path.dirname(os.path.realpath(__file__))
-f = open(tbd + '/data/reference.json')
-data = json.load(f)
-f.close()
-f = open(tbd + '/data/dialog.json')
-dialog = json.load(f)
-f.close()
-
-
-# Card variables
-cards = data['tarot_cards']
-rom_num = data['rom_num']
-summaries = data['summaries']
-descriptions = data['descriptions']
-
-#dialog variables
-
 
 def main():
+    global tbd
+    tbd = os.path.dirname(os.path.realpath(__file__)) + '/'
+    tarotbuddy.loadData(tbd)
     print('\n\t')
-    theatricalPrint('\t' + getGreetingStr(), 0.05)
+    theatricalPrint('\t' + tarotbuddy.getGreetingStr(), 0.05)
     print('\n')
     time.sleep(0.5)
     initialSelection()
+
 
 # Intro progress bar
 def progressBarStart():
@@ -102,16 +88,12 @@ def thinking(a, b):
         i = i + 1
     print('\n')
 
-# Greetings getter
-def getGreetingStr():
-    greeting = dialog['greetings'][random.randint(0,(len(dialog['greetings']) - 1))]
-    return greeting
 
 # Enacting selection
 def initialSelection():
     initial_question=[inquirer.List(
         'Initial_input',
-        message=getGreetingStr(),
+        message=tarotbuddy.getGreetingStr(),
         choices=[
             ('Pull a card','p'),
             ('Spreads','s'),
@@ -132,14 +114,14 @@ def triageSelection(user_in):
         selectLookup()
         main()
     elif user_in == 'i':
-        programInfo()
+        tarotbuddy.programInfo()
     elif user_in == 'd':
         print('Bye bye!')
     else: 
         print('bruh')
 
-# Program functions
 def selectSpread():
+    tarotbuddy.resetDeck()
     thinking(1,5)
     which_spread=[inquirer.List(
         'spread',
@@ -151,30 +133,17 @@ def selectSpread():
             ('Past, Present, Future',3)
         ])]
     selected_spread = inquirer.prompt(which_spread)
-    displaySpread(getHand(selected_spread['spread']))
+    hand_got = tarotbuddy.pullSpread(selected_spread['spread'])
+    displaySpread(hand_got)
 
-def getHand(x):
-    hand = {'name':[],'index':[]}
-    cardLen = len(cards) - 1
-    i = 0
-    while i < x:
-        r = random.randint(1,cardLen)
-        hand['name'].append(cards[r])
-        hand['index'].append(r)
-        i = i + 1
-    hand['name'].append('-- RETURN --')
-    hand['index'].append(99)
-    return hand
 
 def displaySpread(hand):
-    for i in range(11):
-        time.sleep(random.random())
-        progressBar(i, 10)
+    hand.append('-- RETURN --')
     while True:
         current_spread=[inquirer.List(
             'card',
             message='And here is your hand',
-            choices=hand['name']
+            choices=hand
             )]
         selection = inquirer.prompt(current_spread)
         selected_card = selection['card']
@@ -182,50 +151,34 @@ def displaySpread(hand):
             main()
             return False
         else:
-            index = cards.index(selected_card)
-            print('\n')
-            lookupCard(index)
-
-
-def pullCard():
-    cardLen = len(cards) - 1
-    r = random.randint(1,cardLen)
-    thinking(5, 10)
-    os.system('catimg -w 120 ' + tbd + '/data/img/' + str(r) + '.png')
-    theatricalPrint(rom_num[r], 0.1)
-    time.sleep(1)
-    theatricalPrint(cards[r], 0.1)
-    thinking(3,5)
-    theatricalPrint(descriptions[r])
-    thinking(3,5)
-    theatricalPrint(summaries[r])
+            index = tarotbuddy.cards.index(selected_card)
+            lookup_card = tarotbuddy.lookupCard(index)
+            prettyPrintResults(lookup_card, index)
 
 def selectLookup():
     which_card=[inquirer.List(
         'choice',
         message= 'What card would you like to know more on?',
-        choices= cards
+        choices= tarotbuddy.cards
     )]
     selected_card = inquirer.prompt(which_card)
-    index = cards.index(selected_card['choice'])
-    lookupCard(index)
+    index = tarotbuddy.cards.index(selected_card['choice'])
+    lookup_card = tarotbuddy.lookupCard(index)
+    prettyPrintResults(lookup_card, index)
 
+def pullCard():
+    cardLen = len(tarotbuddy.cards) - 1
+    r = random.randint(1,cardLen)
+    lookup_card = tarotbuddy.lookupCard(r)
+    prettyPrintResults(lookup_card, r)
 
-def lookupCard(x):
-    thinking(2, 5)
-    os.system('catimg -w 90 ' + tbd + '/data/img/' + str(x) + '.png')
-    theatricalPrint(rom_num[x], 0.05)
-    theatricalPrint(cards[x], 0.05)
-    theatricalPrint(descriptions[x])
-    theatricalPrint(summaries[x])
-
-def programInfo():
-    print('\n')
-    print('Thanks for using Tarotbuddy!')
-    print('This project is totally free and open source. A little project made by my wife and I')
-    print('Be sure to check out the web version hosted at https://madebyparry.ddns.net/tarotbuddy')
-    print('\n\t With love,')
-    print('\n\t - MBP')
+def prettyPrintResults(list, index):
+    thinking(5, 10)
+    os.system('catimg -w 90 ' + tbd + 'data/img/' + str(index) + '.png')
+    theatricalPrint(list[0], 0.05)
+    theatricalPrint(list[1], 0.05)
+    theatricalPrint(list[2])
+    theatricalPrint(list[3])
 
 
 # Program start

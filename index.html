@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="tarotbuddy_web_py/css/style.css">
+    <script defer src="https://pyscript.net/releases/2022.12.1/pyscript.js"></script>
+    <title>Tarotbuddy - the friendly fortune-telling robot</title>
+</head>
+<body>
+    <div id="page">
+        <main id="interface-wrapper" class="interface-wrapper">
+            <div class="interface-inner">
+                <section class="tb-header">
+                    <div class="tb-header-inner">
+                        <h1>TarotBuddy</h1>
+                        <h2>The friendly roboy fortune-teller</h2>
+                    </div>
+                </section>
+                <section class="tb-options">
+                    <div class="tb-options-inner">
+                        <button py-click="drawButton()" id="button1">Draw 1</button>
+                        <button py-click="speadsButton()" id="button2">Spreads</button>
+                        <button py-click="lookupButton()" id="button3">Card Lookup</button>
+                    </div>
+                </section>
+                <section class="tb-main">
+                    <section class="tb-body">
+                        <div class="tb-body-inner">
+                            <div class="body-left" id="body-left">
+                                <div class="body-left-inner">
+                                        <p id="card-num">\/</p>
+                                        <p id="card-name">TarotBuddy</p>
+                                        <img src="data/img/0.png" alt="" id="card-img">
+                                </div>
+                            </div>
+                            <div class="body-right" id="body-right">
+                                <div id="info-container" class="info-container">
+                                    <div class="card-moreinfo">
+                                        <p id="card-sum"></p>
+                                        <p id="card-desc"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="list-wrapper" class="list-wrapper">
+                                <div id="select-container" class="select-container">
+                                    <select name="user-select" id="user-select">
+                                        <!-- Spread opt -->
+                                    </select>
+                                    <button id="go" py-click="getSpread()">Go!</button>
+                                </div>
+                                <p>Select an option</p>
+                            </div>
+                        </div>
+                    </section>    
+                </section>
+            </div>
+        </main>
+    </div>
+    <py-config>
+        [[fetch]]
+        files = ['data/reference.json','data/dialog.json','tarotbuddy.py']
+    </py-config>
+    <py-script src="tarotbuddy.py"></py-script>
+    <py-script src="web.py"></py-script>
+</body>
+</html>

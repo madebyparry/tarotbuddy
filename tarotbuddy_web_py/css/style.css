@@ -1,0 +1,124 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: 'fantasque sans mono', monospace;
+  background-image: url("../assets/tb_starry_background.png");
+  background-size: cover;
+  margin: 0px; }
+  body * {
+    box-sizing: border-box; }
+
+.interface-wrapper {
+  width: 80%;
+  border: 1px solid gold;
+  background-color: black;
+  margin: 5% auto;
+  padding: 20px; }
+
+.tb-header-inner {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; }
+  .tb-header-inner h1 {
+    margin: 0px;
+    font-size: 5em; }
+  .tb-header-inner h2 {
+    margin: 0px;
+    color: coral; }
+
+.tb-options .tb-options-inner {
+  display: flex;
+  flex-direction: row; }
+.tb-options button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 10px 0px;
+  padding: 5px 10px;
+  background-color: gold;
+  border-radius: 0px;
+  border: 2px solid transparent;
+  border-bottom: none;
+  color: black;
+  font-size: 1.5em;
+  font-weight: bold;
+  font-family: 'fantasque sans mono', monospace; }
+  .tb-options button:hover {
+    border-color: white; }
+  .tb-options button:first-child {
+    margin-left: 0px; }
+
+.tb-main {
+  display: flex;
+  width: 100%; }
+  .tb-main .tb-body {
+    flex: 1;
+    border: 1px solid gold; }
+    .tb-main .tb-body .tb-body-inner {
+      display: flex; }
+    .tb-main .tb-body .body-left {
+      text-align: center;
+      border-right: 1px solid gold;
+      width: 20%;
+      padding: 20px; }
+      .tb-main .tb-body .body-left p {
+        font-size: 1.5em; }
+      .tb-main .tb-body .body-left img {
+        width: 100%; }
+    .tb-main .tb-body .body-right {
+      flex: 1;
+      padding: 20px; }
+      .tb-main .tb-body .body-right .all-cards {
+        list-style-type: none;
+        padding: 0px;
+        column-count: 4; }
+        .tb-main .tb-body .body-right .all-cards li:hover {
+          cursor: pointer;
+          color: coral; }
+    .tb-main .tb-body .list-wrapper {
+      width: 20%;
+      border-left: 1px solid gold;
+      padding: 20px; }
+      .tb-main .tb-body .list-wrapper .select-container {
+        width: 100%;
+        display: flex; }
+        .tb-main .tb-body .list-wrapper .select-container select {
+          flex: 3;
+          border-radius: 0px;
+          background-color: gold;
+          color: black;
+          border: 1px solid transparent;
+          padding: 5px; }
+        .tb-main .tb-body .list-wrapper .select-container button {
+          flex: 1;
+          border-radius: 0px;
+          background-color: white;
+          color: black;
+          border: 1px solid transparent;
+          padding: 5px; }
+      .tb-main .tb-body .list-wrapper p {
+        cursor: pointer; }
+        .tb-main .tb-body .list-wrapper p:hover {
+          color: coral; }
+
+#interface-wrapper .hidden {
+  height: 0px;
+  overflow: hidden;
+  padding: 0px;
+  margin: 0px; }
+
+py-config {
+  display: none; }
+
+py-terminal {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: black;
+  padding: 10px; }
+
+/*# sourceMappingURL=style.css.map */
